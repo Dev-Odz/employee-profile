@@ -16,6 +16,7 @@ let sequelize = new Sequelize(
 /** Add the models to the object */
 db.Users = require("./users")(sequelize, DataTypes);
 db.Department = require("./department")(sequelize, DataTypes);
+db.Role = require("./roles")(sequelize, DataTypes);
 
 
 /** This runs all the association */

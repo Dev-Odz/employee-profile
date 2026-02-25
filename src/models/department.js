@@ -17,15 +17,15 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 				unique: true,
-        validate: {
-          len: [3, 50],
-        },
+				validate: {
+					len: [3, 50],
+				},
 			},
 		},
 		{
 			sequelize,
 			modelName: "Department",
-      tableName: "Departments",
+			tableName: "Departments",
 		},
 	);
 
