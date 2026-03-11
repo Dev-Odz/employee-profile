@@ -17,7 +17,7 @@ const {
 	createDepartmentSchema,
 } = require("../validation/department.validation");
 
-router.get("/", authenticateToken, getAllDepartmentsController); // Get all departments (accessible to authenticated users)
+router.get("/", authenticateToken, getAllDepartmentsController);
 router.post(
 	"/",
 	authenticateToken,
@@ -25,6 +25,5 @@ router.post(
 	authorizeRole("admin"),
 	createDepartmentController,
 );
-// Create a new department (accessible only to admin users)
 
 module.exports = router;

@@ -6,9 +6,14 @@ const getAllDepartments = async () => {
 		const departments = await Department.findAll({
 			attributes: { exclude: ["createdAt", "updatedAt"] },
 		});
+
+		if (!departments) {
+			throw new AppError("No departments found", 404);
+		}
+
 		return departments;
 	} catch (error) {
-		throw new AppError(error.message, 500);
+		throw error;
 	}
 };
 
@@ -36,7 +41,7 @@ const createDepartment = async (name) => {
 
 		return newDepartment;
 	} catch (error) {
-		throw new AppError(error.message, 500);
+		throw error
 	}
 };
 
