@@ -1,6 +1,6 @@
 const request = require("supertest");
-const db = require("../models/users");
-const app = require("../app"); // your express app
+const db = require("../models");
+const app = require("../app");
 
 describe("Auth API", () => {
 	it("should reject invalid login", async () => {
