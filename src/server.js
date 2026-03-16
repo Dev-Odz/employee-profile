@@ -29,7 +29,4 @@ sequelize
 // Start server
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);
-	console.log(`This is a test that the CI/CD pipeline is working correctly.`);
-
-	//test
 });
