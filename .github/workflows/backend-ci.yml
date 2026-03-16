@@ -1,14 +1,27 @@
-on:  
-  push:  
-    branches:  
-      - main  
-  pull_request:  
-    branches:  
-      - main  
-  
-jobs:  
-  backend-ci:  
+name: Backend CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  backend-ci:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: odz_admin
+          POSTGRES_PASSWORD: 1234
+          POSTGRES_DB: employee_profile
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U odz_admin"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     env:
       DB_HOST: localhost
@@ -17,22 +30,22 @@ jobs:
       DB_NAME: employee_profile
       DB_PORT: 5432
       JWT_SECRET: 1234
-      JWT_EXPIRES_IN: 1d  
-  
-    steps:  
-      - name: Checkout code  
-        uses: actions/checkout@v3  
-  
-      - name: Setup Node  
-        uses: actions/setup-node@v3  
-        with:  
-          node-version: 18  
-  
-      - name: Install dependencies  
-        run: npm install  
-  
-      - name: Run tests  
-        run: npm test  
-  
-      - name: Build Docker image  
+      JWT_EXPIRES_IN: 1d
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build Docker image
         run: docker build -t employee-profile-api .

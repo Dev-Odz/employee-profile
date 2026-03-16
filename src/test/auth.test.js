@@ -10,7 +10,7 @@ describe("Auth API", () => {
 			email: "fake@email.com",
 			password: "wrongpass",
 		});
-
+		
 		expect(res.statusCode).toBe(401);
 	});
 });
