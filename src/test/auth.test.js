@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const request = require("supertest");
 const db = require("../models");
 const app = require("../app");
