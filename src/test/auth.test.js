@@ -1,8 +1,10 @@
-require("dotenv").config();
-
 const request = require("supertest");
 const db = require("../models");
 const app = require("../app");
+
+beforeAll(async () => {
+	await db.sequelize.authenticate();
+});
 
 describe("Auth API", () => {
 	it("should reject invalid login", async () => {

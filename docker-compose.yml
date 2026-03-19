@@ -6,23 +6,25 @@ services:
     container_name: employee-backend
     ports:
       - "3000:3000"
+    env_file:
+      - .env.production
     environment:
-      DB_HOST: db
-      DB_USER: admin
-      DB_PASS: secret
-      DB_NAME: employee_db
-      JWT_SECRET: secret
+      NODE_ENV: production  
+    # depends_on ensures that the backend service starts after the postgres service is healthy
+    # depends_on value should be same as container_name
+    # Note: depends_on does not wait for the service to be "ready", it only waits for it to start. For a more robust solution, consider using a healthcheck in the postgres service and configuring the backend to wait for the database to be ready before starting.
     depends_on:
-      - db
+      - postgres
     restart: always
 
-  db:
+  # Config name should be same as DB_HOST in .env file
+  postgres:
     image: postgres:15
-    container_name: employee-db
+    container_name: employee-postgres
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: employee_db
+      POSTGRES_USER: odz_admin
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: employee_profile
     ports:
       - "5432:5432"
     volumes:

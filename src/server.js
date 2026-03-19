@@ -2,6 +2,7 @@ const app = require("./app");
 const Sequelize = require("sequelize");
 
 const env = process.env.NODE_ENV || "development";
+
 const config = require("./config/config")[env];
 
 const PORT = 3000;
@@ -27,6 +28,8 @@ sequelize
 	});
 
 // Start server
-app.listen(PORT, () => {
-	console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== "test") {
+	app.listen(PORT, () => {
+		console.log(`Server is running on port ${PORT}`);
+	});
+}

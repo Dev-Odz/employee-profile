@@ -30,7 +30,7 @@ jobs:
     # --------------------------
     # ENVIRONMENT VARIABLES
     # --------------------------
-    
+
     # Set environment variables for the application
     env:
       DB_HOST: localhost
@@ -41,18 +41,15 @@ jobs:
       JWT_SECRET: 1234
       JWT_EXPIRES_IN: 1d
 
-
     # --------------------------
     # STEPS
     # --------------------------
     steps:
-
       # --------------------------
       # CHECKOUT CODE
       # --------------------------
       - name: Checkout code
         uses: actions/checkout@v3
-
 
       # --------------------------
       # SETUP NODE AND INSTALL DEPENDENCIES

@@ -1,9 +1,14 @@
 const path = require("path");
-require("dotenv").config({
-	path: path.resolve(__dirname, "../../.env"),
+
+const dotenv = require("dotenv");
+const env = process.env.NODE_ENV || "development";
+
+dotenv.config({
+	path: path.resolve(__dirname, `../../.env.${env}`),
 });
 
-console.log("DB_PASS:", process.env.DB_PASS);
+console.log(`Loaded environment: ${env}`);
+
 
 module.exports = {
 	development: {
@@ -16,12 +21,15 @@ module.exports = {
 	test: {
 		username: process.env.DB_USER,
 		password: process.env.DB_PASS,
-		database: process.env.DB_NAME_TEST,
+		database: process.env.DB_NAME,
 		host: process.env.DB_HOST,
 		dialect: "postgres",
 	},
 	production: {
-		use_env_variable: "DATABASE_URL",
+		username: process.env.DB_USER,
+		password: process.env.DB_PASS,
+		database: process.env.DB_NAME,
+		host: process.env.DB_HOST,
 		dialect: "postgres",
 	},
 };
