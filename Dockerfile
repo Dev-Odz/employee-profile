@@ -1,6 +1,9 @@
 # 1️⃣ Base image (MUST BE FIRST)
 FROM node:18
 
+# Install curl (Docker doesn't include it because life is hard)  
+RUN apt-get update && apt-get install -y curl  
+
 # 2️⃣ Set working directory
 WORKDIR /usr/src/app
 
@@ -22,5 +25,12 @@ RUN chmod +x start.sh
 # 8️⃣ Expose port
 EXPOSE 3000
 
+# Health check  
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \  
+  CMD curl -f http://localhost:3000/health || exit 1
+
 # 9️⃣ Start app
 CMD ["sh", "start.sh"]
+
+
+  

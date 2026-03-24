@@ -1,3 +1,7 @@
+require("dotenv").config({
+	path: `.env.${process.env.NODE_ENV || "development"}`,
+});
+
 const { Client } = require("pg");
 
 const waitForDb = async () => {
@@ -17,6 +21,7 @@ const waitForDb = async () => {
 			console.log("✅ PostgreSQL is ready!");
 			return;
 		} catch (err) {
+			console.log("❌ Could not connect to DB: ", err.message);
 			console.log("⏳ Waiting for PostgreSQL...");
 			retries--;
 

@@ -36,6 +36,9 @@ app.use(express.json());
 app.use("/", mainRoute);
 app.use("/auth", authRoute);
 app.use("/department", departmentRoute);
+app.get("/health", (req, res) => {
+	res.status(200).send("OK");
+});
 
 // Error handler
 app.use(errorHandler);
