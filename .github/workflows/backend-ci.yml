@@ -108,12 +108,20 @@ jobs:
 
           script: |
 
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/employee-profile-api
+            cd ~/employee-profile 
+            
+            echo "Pull latest code..." 
+            git fetch origin 
+            git reset --hard origin/main 
+            
+            echo "Pull latest images..." 
+            docker compose pull 
+            
+            echo "Recreate containers..." 
+            docker compose down 
+            docker compose up -d 
+            
+            echo "Cleanup unused images..." 
+            docker image prune -f
 
-            docker stop employee-api || true
-            docker rm employee-api || true
 
-            docker run -d \
-              -p 80:3000 \
-              --name employee-api \
-              ${{ secrets.DOCKERHUB_USERNAME }}/employee-profile-api
