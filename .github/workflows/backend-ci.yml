@@ -93,7 +93,7 @@ jobs:
       # --------------------------
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/employee-profile-api
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/employee-profile-api:latest
 
       # --------------------------
       # DEPLOY TO EC2
@@ -115,13 +115,22 @@ jobs:
             git reset --hard origin/main 
             
             echo "Pull latest images..." 
-            docker compose pull 
+            docker-compose pull 
             
             echo "Recreate containers..." 
-            docker compose down 
-            docker compose up -d 
+            docker-compose down 
+            docker-compose up -d 
             
             echo "Cleanup unused images..." 
             docker image prune -f
 
 
+# How does CI/CD work in this workflow?
+# In this workflow, CI/CD is implemented through a series of automated steps that are triggered whenever there is a push to the main branch. The workflow includes the following stages:
+# 1. Checkout code: This step checks out the code from the repository.
+# 2. Setup Node: This step sets up the Node.js environment.
+# 3. Install dependencies and run tests: This step installs the dependencies and runs the tests.
+# 4. Build Docker image: This step builds a Docker image for the application.
+# 5. Login to DockerHub: This step logs in to DockerHub.
+# 6. Push Docker image: This step pushes the Docker image to DockerHub.
+# 7. Deploy to EC2: This step deploys the application to an EC2 instance. The deployment process includes pulling the latest code, pulling the latest Docker images, recreating the containers, and cleaning up unused images. This entire process is automated, ensuring that any changes pushed to the main branch are automatically tested and deployed without manual intervention.

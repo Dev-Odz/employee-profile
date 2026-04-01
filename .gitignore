@@ -1,3 +1,28 @@
-node_modules
+# Node
+
+node_modules/
+npm-debug.log
+
+# Env
+
 .env
-uploads
+.env.*
+
+# Logs
+
+*.log
+
+# Build
+
+dist/
+build/
+
+# OS
+
+.DS_Store
+Thumbs.db
+
+# Certbot (VERY IMPORTANT)
+
+certbot/conf/
+certbot/www/

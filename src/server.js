@@ -1,3 +1,4 @@
+const { connectRedis } = require("./config/redis.js");
 const app = require("./app");
 const Sequelize = require("sequelize");
 
@@ -26,6 +27,12 @@ sequelize
 	.catch((error) => {
 		console.error("Unable to connect to the database:", error);
 	});
+
+async function connectToRedis() {
+	await connectRedis();
+}
+
+connectToRedis();
 
 // Start server
 if (process.env.NODE_ENV !== "test") {
