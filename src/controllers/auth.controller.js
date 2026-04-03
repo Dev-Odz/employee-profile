@@ -23,7 +23,7 @@ const createUserController = async (req, res) => {
 		.then(async (user) => {
 			if (process.env.NODE_ENV !== "development") {
 				// Invalidate cache for the updated user and the list of all users
-				deleteCache(`users:${id}`);
+				deleteCache(`users:all`);
 
 				const { emailQueue } = require("../queues/queue");
 
@@ -32,6 +32,8 @@ const createUserController = async (req, res) => {
 					name: user.name,
 				});
 			}
+
+			console.log("User registered:", user);
 
 			res.status(201).json({
 				id: user["id"],
@@ -137,7 +139,7 @@ const updateUserByIdController = (req, res) => {
 
 				if (process.env.NODE_ENV !== "development") {
 					// Invalidate cache for the updated user and the list of all users
-					deleteCache(`users:${id}`);
+					deleteCache(`users:all`);
 				}
 
 				res.status(200).json({
@@ -169,7 +171,7 @@ const deleteUserByIdController = (req, res) => {
 			.then((result) => {
 				if (process.env.NODE_ENV !== "development") {
 					// Invalidate cache for the updated user and the list of all users
-					deleteCache(`users:${id}`);
+					deleteCache(`users:all`);
 				}
 
 				res.status(204).json({
