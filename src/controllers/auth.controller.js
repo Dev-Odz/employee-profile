@@ -7,6 +7,10 @@ const {
 	loginUser,
 } = require("../services/auth.service");
 
+const { client } = require("../config/redis");
+
+const deleteCache = require("../utils/deleteCache");
+
 const AppError = require("../utils/AppError");
 
 const createUserController = async (req, res) => {
@@ -16,7 +20,19 @@ const createUserController = async (req, res) => {
 
 	// Call the service to register the user
 	registerUser(name, email, password, role, departmentId)
-		.then((user) => {
+		.then(async (user) => {
+			if (process.env.NODE_ENV !== "development") {
+				// Invalidate cache for the updated user and the list of all users
+				deleteCache(`users:${id}`);
+
+				const { emailQueue } = require("../queues/queue");
+
+				await emailQueue.add("sendWelcomeEmail", {
+					email: user.email,
+					name: user.name,
+				});
+			}
+
 			res.status(201).json({
 				id: user["id"],
 				success: true,
@@ -31,7 +47,28 @@ const createUserController = async (req, res) => {
 const getUsersController = async (req, res, next) => {
 	// This controller will handle the logic for retrieving all users from the database. It will call the appropriate service function to fetch the users and then send the response back to the client. Error handling will also be included to manage any issues that may arise during the retrieval process.
 
+	if (process.env.NODE_ENV) {
+	}
+
 	try {
+		const cacheKey = "users:all"; // Define a cache key for storing users data in Redis
+
+		if (process.env.NODE_ENV !== "development") {
+			// 1️⃣ Check Redis first
+			const cachedUsers = await client.get(cacheKey);
+
+			if (cachedUsers) {
+				console.log("Users retrieved from cache");
+				return res.status(200).json({
+					success: true,
+					status: 200,
+					message: "Users retrieved successfully",
+					data: JSON.parse(cachedUsers),
+				});
+			}
+		}
+
+		// 2️⃣ If not in cache, fetch from database
 		const users = await getUsers(req.query);
 
 		if (!users) {
@@ -40,6 +77,13 @@ const getUsersController = async (req, res, next) => {
 			next(error);
 
 			// What does this 3 lines of code above do? These lines of code create a new Error object with the message "Users not found" and set the statusCode property of the error to 404. Then, the error is passed to the next middleware function in the Express.js request-response cycle using the next() function. This allows the error to be handled by an error-handling middleware, which can send an appropriate response back to the client based on the error's status code and message.
+		}
+
+		if (process.env.NODE_ENV !== "development") {
+			// 3️⃣ Store in Redis cache for future requests
+			await client.set(cacheKey, JSON.stringify(users), {
+				EX: 60, // Cache expires in 60 seconds
+			});
 		}
 
 		res.status(200).json({
@@ -90,6 +134,12 @@ const updateUserByIdController = (req, res) => {
 						error: "User not found",
 					});
 				}
+
+				if (process.env.NODE_ENV !== "development") {
+					// Invalidate cache for the updated user and the list of all users
+					deleteCache(`users:${id}`);
+				}
+
 				res.status(200).json({
 					data: updatedUser,
 					message: "User updated successfully",
@@ -98,6 +148,7 @@ const updateUserByIdController = (req, res) => {
 				});
 			})
 			.catch((error) => {
+				console.log(error);
 				res.status(500).json({
 					status: error.status || 500,
 					error: error.message,
@@ -116,6 +167,11 @@ const deleteUserByIdController = (req, res) => {
 
 		deleteUserById(id)
 			.then((result) => {
+				if (process.env.NODE_ENV !== "development") {
+					// Invalidate cache for the updated user and the list of all users
+					deleteCache(`users:${id}`);
+				}
+
 				res.status(204).json({
 					message: result.message,
 					status: 204,

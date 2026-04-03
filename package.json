@@ -9,6 +9,7 @@
 		"start:prod": "cross-env NODE_ENV=production node src/server.js",
 		"test": "cross-env NODE_ENV=test jest",
 		"db:migrate": "npx sequelize-cli db:migrate",
+		"db:migrate:undo:all": "npx sequelize-cli db:migrate:undo:all",
 		"db:seed:initial": "npx sequelize-cli db:seed --seed initialdata.js",
 		"reset:seed": "del .seeded",
 		"start:local": "node wait-for-db.js && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all && npm run dev"
@@ -20,6 +21,7 @@
 	"dependencies": {
 		"bcrypt": "^6.0.0",
 		"body-parser": "^2.2.2",
+		"bullmq": "^5.73.0",
 		"cors": "^2.8.6",
 		"dotenv": "^17.3.1",
 		"express": "^5.2.1",

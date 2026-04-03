@@ -28,11 +28,12 @@ sequelize
 		console.error("Unable to connect to the database:", error);
 	});
 
-async function connectToRedis() {
-	await connectRedis();
+if (process.env.NODE_ENV !== "development") {
+	async function connectToRedis() {
+		await connectRedis();
+	}
+	connectToRedis();
 }
-
-connectToRedis();
 
 // Start server
 if (process.env.NODE_ENV !== "test") {

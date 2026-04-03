@@ -8,21 +8,22 @@ npx sequelize-cli db:migrate
 
 echo "🔍 Checking if seed is needed..."
 
-SEED_COUNT=$(node -e "
-const { Sequelize } = require('sequelize');
-require('./src/config/config');
+SEED_COUNT=""
 
-(async () => {
-  const sequelize = require('./src/models');
-  const count = await sequelize.Users.count();
-  console.log(count);
-  process.exit();
-})();
-")
+for i in 1 2 3 4 5
+do
+  SEED_COUNT=$(node scripts/seed-check.js | tail -n 1 | tr -d '[:space:]')
+
+  if [ -n "$SEED_COUNT" ]; then
+    break
+  fi
+
+  echo "Retrying count... ($i)"
+  sleep 1
+done
 
 if [ "$SEED_COUNT" = "0" ]; then
-  echo "🌱 Seeding data..."
-  npx sequelize-cli db:seed:all
+  npx sequelize-cli db:seed --seed initialdata.js
 else
   echo "✅ Data already exists. Skipping seed..."
 fi

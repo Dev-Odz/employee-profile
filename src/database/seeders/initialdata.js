@@ -24,6 +24,21 @@ module.exports = {
 				updatedAt: new Date(),
 			},
 		]);
+
+
+		// bulk insert departments
+		await queryInterface.bulkInsert("Departments", [
+			{
+				name: "Frontend",
+				createdAt: new Date(),
+				updatedAt: new Date(),
+			},
+			{
+				name: "Backend",
+				createdAt: new Date(),
+				updatedAt: new Date(),
+			},
+		]);
 	},
 
 	async down(queryInterface, Sequelize) {
