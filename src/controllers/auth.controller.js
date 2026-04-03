@@ -21,17 +21,20 @@ const createUserController = async (req, res) => {
 	// Call the service to register the user
 	registerUser(name, email, password, role, departmentId)
 		.then(async (user) => {
-			if (process.env.NODE_ENV !== "development") {
-				// Invalidate cache for the updated user and the list of all users
-				deleteCache(`users:all`);
 
-				const { emailQueue } = require("../queues/queue");
+			// const plainUser = user.get ? user.get({ plain: true }) : user;
 
-				await emailQueue.add("sendWelcomeEmail", {
-					email: user.email,
-					name: user.name,
-				});
-			}
+			// if (process.env.NODE_ENV !== "development") {
+			// 	// Invalidate cache for the updated user and the list of all users
+			// 	deleteCache(`users:all`);
+
+			// 	const { emailQueue } = require("../queues/queue");
+
+			// 	await emailQueue.add("sendWelcomeEmail", {
+			// 		email: user.email,
+			// 		name: user.name,
+			// 	});
+			// }
 
 			console.log("User registered:", user);
 
