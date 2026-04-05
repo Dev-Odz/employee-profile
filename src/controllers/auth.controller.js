@@ -50,10 +50,6 @@ const createUserController = async (req, res) => {
 };
 
 const getUsersController = async (req, res, next) => {
-	// This controller will handle the logic for retrieving all users from the database. It will call the appropriate service function to fetch the users and then send the response back to the client. Error handling will also be included to manage any issues that may arise during the retrieval process.
-
-	if (process.env.NODE_ENV) {
-	}
 
 	try {
 		const cacheKey = "users:all"; // Define a cache key for storing users data in Redis
