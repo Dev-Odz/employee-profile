@@ -7,7 +7,6 @@ dotenv.config({
 	path: path.resolve(__dirname, `../../.env.${env}`),
 });
 
-console.log(`Loaded environment: ${env}`);
 
 
 module.exports = {

@@ -4,9 +4,12 @@
 
 		await db.sequelize.authenticate();
 
+		console.log("DB NAME:", db.sequelize.config.database);
+		console.log("HOST:", db.sequelize.config.host);
+
 		const count = await db.Users.count();
 
-		console.log(count); // use log here, not stdout.write
+		process.stdout.write(String(count));
 	} catch (err) {
 		console.error("COUNT ERROR:", err);
 		process.exit(1);

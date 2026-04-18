@@ -3,6 +3,7 @@ services:
     build: .
     # image: odehmarkable/employee-profile-api
     # container_name: employee-backend
+    command: node bootstrap.js
     ports:
       - "3000:3000"
     env_file:
@@ -25,7 +26,7 @@ services:
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: employee_profile
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     restart: always
